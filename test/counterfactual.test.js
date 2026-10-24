@@ -144,3 +144,17 @@ test('removing no-store is graded high risk, never silently suggested', () => {
   assert.strictEqual(removal.risk, 'high');
   assert.match(removal.riskNote, /forbade|discard/i);
 });
+
+test('lower-casing directive names is offered as a zero-semantics repair', () => {
+  const cf = counterfactual(fixture({ 'cache-control': 'Max-Age=600' }), {
+    now: NOW,
+    responseTime: NOW,
+  });
+  assert.strictEqual(cf.baseline.timeToLive, 0, 'baseline must have no lifetime');
+
+  const fix = cf.fixes.find((f) => f.id === 'normalize-directive-case');
+  assert.ok(fix, 'lower-casing must be offered');
+  assert.strictEqual(fix.risk, 'low', 'this repair cannot change client-visible semantics');
+  assert.strictEqual(fix.effect.axes.timeToLive.from, 0);
+  assert.ok(fix.effect.axes.timeToLive.to >= 600000);
+});

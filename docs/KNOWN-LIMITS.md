@@ -90,4 +90,4 @@ coverage and can afford the runtime.
 
 Each finding states the measurement it came from, and the evidence string can be reproduced by
 running the engine directly. None of them is a full conformance check: a response with no
-findings is not proven correct, only free of the nine patterns that are checked.
+findings is not proven correct, only free of the ten patterns that are checked.

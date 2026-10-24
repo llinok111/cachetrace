@@ -143,6 +143,7 @@ never cache on a CDN.
 
 ### Also detected
 
+`mixed-case-directive` (`Max-Age=600` stored as an unrelated directive, so the lifetime is 0),
 `invisible-header-case` (canonical-cased `Cache-Control` that the engine cannot read),
 `duplicate-directive` (RFC 9111 §4.2.1 says invalid, engine keeps the last),
 `quoted-comma-split` (`no-cache="a, b"` cut in half by the naive comma split),
@@ -229,7 +230,7 @@ approximate, and [`docs/RFC-MAPPING.md`](docs/RFC-MAPPING.md) for the clause beh
 npm test
 ```
 
-91 tests across eight files: directive parsing, per-rule trace assertions, counterfactual
+94 tests across eight files: directive parsing, per-rule trace assertions, counterfactual
 self-verification, risk detection, batch audit over a HAR fixture, edge and adversarial inputs,
 CLI end-to-end, and the differential suite (3,100 generated cases plus a negative control).
 

@@ -145,3 +145,18 @@ test('findings are sorted by severity', () => {
     assert.ok(rank[order[i - 1]] >= rank[order[i]], `severity order broken: ${order.join(',')}`);
   }
 });
+
+test('mixed-case-directive explains why Max-Age=600 is ignored', () => {
+  const e = run(fixture({ 'cache-control': 'Max-Age=600' }));
+  assert.ok(has(e, 'mixed-case-directive'));
+  assert.strictEqual(e.verdict.maxAge, 0, 'the engine must not see Max-Age');
+  const finding = e.risks.find((r) => r.code === 'mixed-case-directive');
+  assert.match(finding.evidence, /Max-Age/);
+  assert.match(finding.clause, /5\.2/);
+});
+
+test('lower-case directives produce no mixed-case finding', () => {
+  const e = run(fixture({ 'cache-control': 'max-age=600' }));
+  assert.ok(!has(e, 'mixed-case-directive'));
+  assert.strictEqual(e.verdict.maxAge, 600);
+});
