@@ -1,0 +1,45 @@
+{
+  "name": "cachetrace",
+  "version": "0.1.0",
+  "description": "Explain and audit HTTP cache decisions with the same engine your CDN uses: every verdict traced to an RFC 9111 clause, every suggested fix re-verified against the real policy.",
+  "license": "BSD-2-Clause",
+  "author": "cachetrace contributors",
+  "type": "commonjs",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "bin": {
+    "cachetrace": "bin/cachetrace.js"
+  },
+  "files": [
+    "lib",
+    "bin",
+    "docs",
+    "NOTICE",
+    "LICENSE",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node --test \"test/*.test.js\"",
+    "test:verbose": "node --test --test-reporter=spec \"test/*.test.js\"",
+    "smoke": "node bin/cachetrace.js explain test/fixtures/immutable.json --now 1792826880000",
+    "audit:demo": "node bin/cachetrace.js audit test/fixtures/site.har --now 1792826880000 --format md"
+  },
+  "keywords": [
+    "http",
+    "cache",
+    "cache-control",
+    "rfc9111",
+    "cdn",
+    "diagnostics",
+    "explainability"
+  ],
+  "peerDependencies": {
+    "http-cache-semantics": ">=4.1.1"
+  },
+  "devDependencies": {
+    "http-cache-semantics": "4.3.0"
+  }
+}

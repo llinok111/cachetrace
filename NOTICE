@@ -1,0 +1,32 @@
+cachetrace
+==========
+
+This project is a derivative work built on top of http-cache-semantics.
+
+Upstream
+--------
+  Project : http-cache-semantics
+  Author  : Kornel Lesiński
+  Source  : https://github.com/kornelski/http-cache-semantics
+  Version : 4.3.0 (decision semantics aligned with this release)
+  Commit  : b1d4bd682fbab0252985de45219f4e7497c0067c
+  License : BSD-2-Clause
+
+What cachetrace adds
+--------------------
+cachetrace does not vendor or modify upstream source code. It consumes upstream
+as a peer dependency at runtime and provides an explainability layer on top:
+
+  - an independent replay of the same decision rules, emitting a node per check
+  - differential verification of that replay against upstream, per request
+  - counterfactual analysis whose every suggestion is re-verified upstream
+  - batch auditing over HAR / NDJSON / JSON response inventories
+
+Upstream's own test suite is not modified and continues to pass unchanged.
+The BSD-2-Clause text in LICENSE covers both the upstream portions and the
+cachetrace additions.
+
+Specification references
+------------------------
+RFC 9111 (HTTP Caching), RFC 7234 (obsoleted predecessor), RFC 5861
+(stale-while-revalidate / stale-if-error), RFC 7231 §6.1 (cacheable status codes).

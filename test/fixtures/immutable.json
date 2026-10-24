@@ -1,0 +1,21 @@
+{
+  "id": "immutable-asset",
+  "url": "https://cdn.example.com/app.3f9a1c.js",
+  "request": {
+    "method": "GET",
+    "url": "https://cdn.example.com/app.3f9a1c.js",
+    "headers": {
+      "host": "cdn.example.com",
+      "accept": "*/*"
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "date": "Sat, 24 Oct 2026 07:28:00 GMT",
+      "cache-control": "public, max-age=31536000, immutable",
+      "content-type": "application/javascript",
+      "etag": "\"3f9a1c\""
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "id": "cookie-blocked",
+  "url": "https://www.example.com/dashboard",
+  "request": {
+    "method": "GET",
+    "url": "https://www.example.com/dashboard",
+    "headers": {
+      "host": "www.example.com"
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "date": "Sat, 24 Oct 2026 07:28:00 GMT",
+      "cache-control": "max-age=600",
+      "set-cookie": "sid=abc123; Path=/; HttpOnly",
+      "content-type": "text/html"
+    }
+  }
+}
