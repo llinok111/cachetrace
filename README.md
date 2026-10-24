@@ -228,9 +228,18 @@ approximate, and [`docs/RFC-MAPPING.md`](docs/RFC-MAPPING.md) for the clause beh
 npm test
 ```
 
-74 tests across seven files: directive parsing, per-rule trace assertions, counterfactual
-self-verification, risk detection, batch audit over a HAR fixture, CLI end-to-end, and the
-differential suite (3,100 generated cases plus a negative control).
+88 tests across eight files: directive parsing, per-rule trace assertions, counterfactual
+self-verification, risk detection, batch audit over a HAR fixture, edge and adversarial inputs,
+CLI end-to-end, and the differential suite (3,100 generated cases plus a negative control).
+
+Cost, measured on this machine (Node 22, Windows, single core):
+
+| input | work | wall time |
+| --- | --- | --- |
+| 1,000 HAR entries | parse + replay + diff | 46 ms |
+| 1,000 HAR entries | same, plus 200 counterfactual analyses | 61 ms |
+
+These are throughput numbers for the analyser, not claims about the engine.
 
 ## License
 
