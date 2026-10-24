@@ -161,3 +161,55 @@ test('an invalid URL is tolerated when a host header exists', () => {
   );
   assert.strictEqual(r.verdict.storable, true);
 });
+
+test('falsy non-string header values are accepted, as upstream accepts them', () => {
+  // Upstream's parseCacheControl does `if (!header) return cc`, so 0, false and
+  // '' are all treated as an absent header rather than as a type error.
+  for (const value of [0, false, '', null]) {
+    const r = replay(input({ 'cache-control': value }), { now: NOW, responseTime: NOW });
+    const policy = new CachePolicy(
+      input({ 'cache-control': value }).request,
+      input({ 'cache-control': value }).response,
+      {}
+    );
+    assert.strictEqual(r.verdict.maxAge, policy.maxAge(), `maxAge differs for ${String(value)}`);
+    assert.strictEqual(r.verdict.storable, policy.storable());
+  }
+});
+
+test('a truthy non-string request Cache-Control is rejected with the field name', () => {
+  assert.throws(
+    () =>
+      replay(
+        { request: { url: '/r', method: 'GET', headers: { host: 'h.test', 'cache-control': [] } }, response: { status: 200, headers: { date: DATE } }, options: {} },
+        { now: NOW, responseTime: NOW }
+      ),
+    /request\.headers\["cache-control"\]/
+  );
+});
+
+test('Vary matching reproduces upstream absent-vs-undefined asymmetry', () => {
+  // Stored request carries the field explicitly as undefined; the new request
+  // omits it. Upstream yields cachedValue === undefined and newValue === false,
+  // so they do not match. Normalising absent to undefined would wrongly match.
+  const stored = {
+    url: '/r',
+    method: 'GET',
+    headers: { host: 'h.test', 'accept-encoding': undefined },
+  };
+  const res = {
+    status: 200,
+    headers: { date: DATE, 'cache-control': 'max-age=600', vary: 'accept-encoding' },
+  };
+  const r = replay({ request: stored, response: res, options: {} }, {
+    now: NOW,
+    responseTime: NOW,
+    request: { url: '/r', method: 'GET', headers: { host: 'h.test' } },
+  });
+  const policy = new CachePolicy(stored, res, {});
+  policy._responseTime = NOW;
+  policy.now = () => NOW;
+  const upstreamReuse = policy.evaluateRequest({ url: '/r', method: 'GET', headers: { host: 'h.test' } }).response !== undefined;
+  assert.strictEqual(r.verdict.reuse, upstreamReuse);
+  assert.strictEqual(r.verdict.reuse, false);
+});

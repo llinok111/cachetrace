@@ -34,12 +34,13 @@ tested     10 single-variable changes, 5 verified improvement(s)
 
 `http-cache-semantics` is a decision engine, and a decision engine returns decisions:
 
-- `storable()` returns a boolean. It is a nine-term `&&` chain, so it short-circuits at the
-  first failing term and the other eight are never evaluated.
-- `maxAge()` returns seconds. It has six separate `return 0` exits, all of which collapse
-  into the same number `0`.
-- `evaluateRequest()` returns `{ response, revalidation }`. Seven distinct control-flow
-  paths produce the same "miss" shape.
+- `storable()` returns a boolean. It is a seven-clause `&&` chain, so it short-circuits at the
+  first failing clause and the remaining ones are never evaluated — even when several of them
+  fail at once.
+- `maxAge()` returns seconds. It has five early `return 0` exits plus a default that is zero in
+  the common case, so five different causes collapse into the same number `0`.
+- `evaluateRequest()` returns `{ response, revalidation }`. Six distinct control-flow paths
+  produce the same "miss" shape.
 
 That is the right design for a hot path. It is the wrong shape for the person staring at a
 CDN dashboard wondering why a `max-age=600` response is not cached.
@@ -228,7 +229,7 @@ approximate, and [`docs/RFC-MAPPING.md`](docs/RFC-MAPPING.md) for the clause beh
 npm test
 ```
 
-88 tests across eight files: directive parsing, per-rule trace assertions, counterfactual
+91 tests across eight files: directive parsing, per-rule trace assertions, counterfactual
 self-verification, risk detection, batch audit over a HAR fixture, edge and adversarial inputs,
 CLI end-to-end, and the differential suite (3,100 generated cases plus a negative control).
 
