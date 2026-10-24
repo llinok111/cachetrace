@@ -59,9 +59,9 @@ test('audit aggregates the HAR fixture correctly', () => {
   assert.strictEqual(result.storage.notStorable, 1);
   assert.ok(result.storage.storable >= 7, `storable=${result.storage.storable}`);
   assert.ok(
-    result.reuseState.dead + result.reuseState.revalidate >= 4,
-    `expected several stored-but-unusable entries, got dead=${result.reuseState.dead} ` +
-      `revalidate=${result.reuseState.revalidate}`
+    result.reuseState.dead + result.reuseState.unusable >= 4,
+    `expected several unusable entries, got dead=${result.reuseState.dead} ` +
+      `unusable=${result.reuseState.unusable}`
   );
   // Reusable: the two immutable assets, the 404 (cacheable by default and given
   // max-age), and the POST that carries explicit freshness.
